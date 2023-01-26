@@ -1,14 +1,16 @@
-import customtkinter
+import os.path
 
+import customtkinter
 import sender
 
 
-class ExampleApp(customtkinter.CTk):
+class MainWindow(customtkinter.CTk):
 
     def __init__(self):
         super().__init__()
         # self.customtkinter.set_appearance_mode("dark")  # Modes: "System" (standard), "Dark", "Light"
         # self.customtkinter.set_default_color_theme("blue")  # Themes: "blue" (standard), "green", "dark-blue"
+        self.entry_destpath = None
         self.button_send = None
         self.button_select = None
         self.label_1 = None
@@ -17,7 +19,7 @@ class ExampleApp(customtkinter.CTk):
         self.window = None
 
         self.geometry("580x300")
-        self.title("PCtoPI-STP")
+        self.title("PCtoPI-SFTP")
 
         self.frame_mainframe = customtkinter.CTkFrame(master=self)
         self.frame_mainframe.pack(pady=20, padx=60, fill="both", expand=True)
@@ -32,17 +34,13 @@ class ExampleApp(customtkinter.CTk):
                                                      placeholder_text="Password", )
         self.entry_password.pack(padx=20, pady=10)
 
-        self.entry_destpath = customtkinter.CTkEntry(master=self.frame_mainframe,
-                                                     placeholder_text="Destination Directory")
-        self.entry_destpath.pack(padx=20, pady=10)
-
         self.button_1 = customtkinter.CTkButton(master=self.frame_mainframe, text="Set", command=self.check_input)
         self.button_1.pack(pady=10, padx=10)
 
     def button_settings(self):
         self.withdraw()
         self.window = customtkinter.CTkToplevel(self)
-        self.window.geometry("400x200")
+        self.window.geometry("500x200")
         self.window.protocol("WM_DELETE_WINDOW", self.callback)
 
         self.frame_secondframe = customtkinter.CTkFrame(master=self.window)
@@ -51,6 +49,10 @@ class ExampleApp(customtkinter.CTk):
         self.label_1 = customtkinter.CTkLabel(master=self.frame_secondframe, text="File: ",
                                               justify=customtkinter.LEFT)
         self.label_1.pack(pady=10, padx=10)
+
+        self.entry_destpath = customtkinter.CTkEntry(master=self.frame_secondframe,
+                                                     placeholder_text="Destination Directory")
+        self.entry_destpath.pack(padx=20, pady=10)
 
         self.button_select = customtkinter.CTkButton(master=self.frame_secondframe, text="Select File",
                                                      command=self.open_files)
@@ -67,6 +69,10 @@ class ExampleApp(customtkinter.CTk):
             self.label_1.configure(text="File: " + self.file.name)
             self.button_send.configure(state="normal")
 
+            sender.set_videofile(self.file.name)
+            path_ending = os.path.basename(self.file.name)
+            sender.destinationPath = self.entry_destpath.get() + '/' + path_ending
+
     def callback(self):
         self.window.destroy()
         self.deiconify()
@@ -76,11 +82,11 @@ class ExampleApp(customtkinter.CTk):
                 or self.entry_destpath.get()):
             print("Fill in everything")
         else:
-            sender.set_variables('', self.entry_destpath.get(), self.entry_host.get(), self.entry_username.get(),
+            sender.set_variables(self.entry_host.get(), self.entry_username.get(),
                                  self.entry_password.get())
             self.button_settings()
 
 
-app = ExampleApp()
+app = MainWindow()
 app.mainloop()
 
