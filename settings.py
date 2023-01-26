@@ -36,7 +36,7 @@ class ExampleApp(customtkinter.CTk):
                                                      placeholder_text="Destination Directory")
         self.entry_destpath.pack(padx=20, pady=10)
 
-        self.button_1 = customtkinter.CTkButton(master=self.frame_mainframe, text="Set", command=self.button_settings)
+        self.button_1 = customtkinter.CTkButton(master=self.frame_mainframe, text="Set", command=self.check_input)
         self.button_1.pack(pady=10, padx=10)
 
     def button_settings(self):
@@ -70,6 +70,15 @@ class ExampleApp(customtkinter.CTk):
     def callback(self):
         self.window.destroy()
         self.deiconify()
+
+    def check_input(self):
+        if not (self.entry_host.get() or self.entry_username.get() or self.entry_password.get()
+                or self.entry_destpath.get()):
+            print("Fill in everything")
+        else:
+            sender.set_variables('', self.entry_destpath.get(), self.entry_host.get(), self.entry_username.get(),
+                                 self.entry_password.get())
+            self.button_settings()
 
 
 app = ExampleApp()
