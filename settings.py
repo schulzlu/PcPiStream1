@@ -1,6 +1,8 @@
 import os.path
 
 import customtkinter
+
+import credentials
 import sender
 
 
@@ -84,6 +86,7 @@ class MainWindow(customtkinter.CTk):
         else:
             sender.set_variables(self.entry_host.get(), self.entry_username.get(),
                                  self.entry_password.get())
+            credentials.set_data(self.entry_host.get(), self.entry_username.get(), self.entry_password.get())
             self.button_settings()
 
 
