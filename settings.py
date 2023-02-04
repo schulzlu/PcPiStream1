@@ -19,6 +19,7 @@ class MainWindow(customtkinter.CTk):
         self.frame_secondframe = None
         self.file = None
         self.window = None
+        self.mybutton = None
 
         self.geometry("580x300")
         self.title("PCtoPI-SFTP")
@@ -77,8 +78,25 @@ class MainWindow(customtkinter.CTk):
         self.frame_secondframe = customtkinter.CTkFrame(master=self.window)
         self.frame_secondframe.pack(pady=20, padx=60, fill="both", expand=True)
 
+        n = credentials.get_json_length()
+        print(n)
+        for j in range(n):
+            self.mybutton = customtkinter.CTkButton(master=self.frame_secondframe, text="Host " + str(j),
+                                                    command=lambda txt=j: self.configure_entries(txt))
+            self.mybutton.pack(pady=10, padx=10)
+
         self.button_send = customtkinter.CTkButton(master=self.frame_secondframe, text="Back", command=self.callback)
         self.button_send.pack(pady=10, padx=10)
+
+    def configure_entries(self, j):
+        r = credentials.read_json(j)
+        self.entry_host.delete(0, 'end')
+        self.entry_username.delete(0, 'end')
+        self.entry_password.delete(0, 'end')
+        self.entry_host.insert(0, r[0])
+        self.entry_username.insert(0, r[1])
+        self.entry_password.insert(0, r[2])
+        self.callback()
 
     def open_files(self):
         ask_file = customtkinter.filedialog.askopenfile()
