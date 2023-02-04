@@ -36,6 +36,10 @@ class MainWindow(customtkinter.CTk):
                                                      placeholder_text="Password", )
         self.entry_password.pack(padx=20, pady=10)
 
+        self.button_presets = customtkinter.CTkButton(master=self.frame_mainframe, text="PreSets",
+                                                      command=self.pre_settings)
+        self.button_presets.pack(pady=10, padx=10)
+
         self.button_1 = customtkinter.CTkButton(master=self.frame_mainframe, text="Set", command=self.check_input)
         self.button_1.pack(pady=10, padx=10)
 
@@ -64,6 +68,18 @@ class MainWindow(customtkinter.CTk):
                                                    command=sender.send_video)
         self.button_send.pack(pady=10, padx=10)
 
+    def pre_settings(self):
+        self.withdraw()
+        self.window = customtkinter.CTkToplevel(self)
+        self.window.geometry("500x200")
+        self.window.protocol("WM_DELETE_WINDOW", self.callback)
+
+        self.frame_secondframe = customtkinter.CTkFrame(master=self.window)
+        self.frame_secondframe.pack(pady=20, padx=60, fill="both", expand=True)
+
+        self.button_send = customtkinter.CTkButton(master=self.frame_secondframe, text="Back", command=self.callback)
+        self.button_send.pack(pady=10, padx=10)
+
     def open_files(self):
         ask_file = customtkinter.filedialog.askopenfile()
         self.file = ask_file
@@ -80,8 +96,7 @@ class MainWindow(customtkinter.CTk):
         self.deiconify()
 
     def check_input(self):
-        if not (self.entry_host.get() or self.entry_username.get() or self.entry_password.get()
-                or self.entry_destpath.get()):
+        if not (self.entry_host.get() or self.entry_username.get() or self.entry_password.get()):
             print("Fill in everything")
         else:
             sender.set_variables(self.entry_host.get(), self.entry_username.get(),
@@ -92,4 +107,3 @@ class MainWindow(customtkinter.CTk):
 
 app = MainWindow()
 app.mainloop()
-
