@@ -1,20 +1,24 @@
 import json
 from os.path import exists
+import unreadable
 
 
 # encode the password
 def encode_pwd(set_pwd):
-    return set_pwd.encode('u32')
+    return unreadable.encode(set_pwd)
 
 
 # decode the password
 def decode_pwd(get_pwd):
-    return get_pwd.decode('u32')
+    return unreadable.decode(get_pwd)
 
 
 def get_json_length():
-    data = json.load(open('data.json'))
-    return len(data)
+    n = 0
+    if exists('data.json'):
+        data = json.load(open('data.json'))
+        n = len(data)
+    return n
 
 
 # Setting the data in local variables
@@ -31,7 +35,7 @@ def write_to_json(host, username, pwd):
     data = {
         'host': host,
         'username': username,
-        'password': str(pwd).replace("'", '"')
+        'password': pwd
     }
     if exists('data.json'):
         print('if')
@@ -62,9 +66,14 @@ def write_to_json(host, username, pwd):
 
 def read_json(entry):
     data = json.load(open('data.json'))
-    host = data[entry - 1]['host']
-    username = data[entry - 1]['username']
-    pwd = decode_pwd(data[entry - 1]['password'])
+    host = data[entry]['host']
+    username = data[entry]['username']
+    pwd = decode_pwd(data[entry]['password'])
     return host, username, pwd
+
+
+
+
+
 
 
